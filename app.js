@@ -1,6 +1,10 @@
-const express = require('express');
+const express = require('express')
+const mongoose = require('./connectdb')
 
-const app = express();
+ const Thing = require('./models/Thing')
+
+const app = express()
+app.use(express.json())
 // app.use( (req, res, next) =>{
 //     console.log('requete recue')
 //     next()
@@ -18,14 +22,25 @@ const app = express();
 // app.use( (req, res) => {
 //     console.log('reponse envoye avec succes')
 // })
+
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
     next();
   })
-
-app.use('/api/stuff', (req, res, next) => {
+  app.post('/api/stuff', (req, res, next) => {
+    delete req.body._id
+    const thing = new Thing({
+      ...req.body
+    })
+    // res.status(201).json({
+    //   message: 'Objet créé !'
+  thing.save()
+  .then(() =>res.status(201).json({ message: "object enregistrer" }) )
+  .catch( error => res.status(400).json({error}))
+  });
+app.get('/api/stuff', (req, res, next) => {
     const stuff = [
       {
         _id: 'oeihfzeoi',
