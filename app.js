@@ -2,10 +2,12 @@ const express = require("express");
 const mongoose = require("./connectdb");
 const stuffRoutes = require('./routes/stuff');
 const userRoutes = require('./routes/user');
+const path = require('path');
 
 
 const app = express()
 app.use(express.json());
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
